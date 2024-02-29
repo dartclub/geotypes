@@ -15,10 +15,19 @@ Point _$PointFromJson(Map<String, dynamic> json) => Point(
           (json['coordinates'] as List<dynamic>).map((e) => e as num).toList()),
     );
 
-Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
-      'bbox': instance.bbox?.toJson(),
-      'coordinates': instance.coordinates.toJson(),
-    };
+Map<String, dynamic> _$PointToJson(Point instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['coordinates'] = instance.coordinates.toJson();
+  return val;
+}
 
 MultiPoint _$MultiPointFromJson(Map<String, dynamic> json) => MultiPoint(
       bbox: json['bbox'] == null
@@ -32,11 +41,19 @@ MultiPoint _$MultiPointFromJson(Map<String, dynamic> json) => MultiPoint(
           const [],
     );
 
-Map<String, dynamic> _$MultiPointToJson(MultiPoint instance) =>
-    <String, dynamic>{
-      'bbox': instance.bbox?.toJson(),
-      'coordinates': instance.coordinates.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$MultiPointToJson(MultiPoint instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['coordinates'] = instance.coordinates.map((e) => e.toJson()).toList();
+  return val;
+}
 
 LineString _$LineStringFromJson(Map<String, dynamic> json) => LineString(
       bbox: json['bbox'] == null
@@ -50,11 +67,19 @@ LineString _$LineStringFromJson(Map<String, dynamic> json) => LineString(
           const [],
     );
 
-Map<String, dynamic> _$LineStringToJson(LineString instance) =>
-    <String, dynamic>{
-      'bbox': instance.bbox?.toJson(),
-      'coordinates': instance.coordinates.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$LineStringToJson(LineString instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['coordinates'] = instance.coordinates.map((e) => e.toJson()).toList();
+  return val;
+}
 
 MultiLineString _$MultiLineStringFromJson(Map<String, dynamic> json) =>
     MultiLineString(
@@ -71,13 +96,21 @@ MultiLineString _$MultiLineStringFromJson(Map<String, dynamic> json) =>
           const [],
     );
 
-Map<String, dynamic> _$MultiLineStringToJson(MultiLineString instance) =>
-    <String, dynamic>{
-      'bbox': instance.bbox?.toJson(),
-      'coordinates': instance.coordinates
-          .map((e) => e.map((e) => e.toJson()).toList())
-          .toList(),
-    };
+Map<String, dynamic> _$MultiLineStringToJson(MultiLineString instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['coordinates'] = instance.coordinates
+      .map((e) => e.map((e) => e.toJson()).toList())
+      .toList();
+  return val;
+}
 
 Polygon _$PolygonFromJson(Map<String, dynamic> json) => Polygon(
       bbox: json['bbox'] == null
@@ -93,12 +126,21 @@ Polygon _$PolygonFromJson(Map<String, dynamic> json) => Polygon(
           const [],
     );
 
-Map<String, dynamic> _$PolygonToJson(Polygon instance) => <String, dynamic>{
-      'bbox': instance.bbox?.toJson(),
-      'coordinates': instance.coordinates
-          .map((e) => e.map((e) => e.toJson()).toList())
-          .toList(),
-    };
+Map<String, dynamic> _$PolygonToJson(Polygon instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['coordinates'] = instance.coordinates
+      .map((e) => e.map((e) => e.toJson()).toList())
+      .toList();
+  return val;
+}
 
 MultiPolygon _$MultiPolygonFromJson(Map<String, dynamic> json) => MultiPolygon(
       bbox: json['bbox'] == null
@@ -116,20 +158,37 @@ MultiPolygon _$MultiPolygonFromJson(Map<String, dynamic> json) => MultiPolygon(
           const [],
     );
 
-Map<String, dynamic> _$MultiPolygonToJson(MultiPolygon instance) =>
-    <String, dynamic>{
-      'bbox': instance.bbox?.toJson(),
-      'coordinates': instance.coordinates
-          .map((e) => e.map((e) => e.map((e) => e.toJson()).toList()).toList())
-          .toList(),
-    };
+Map<String, dynamic> _$MultiPolygonToJson(MultiPolygon instance) {
+  final val = <String, dynamic>{};
 
-Map<String, dynamic> _$GeometryCollectionToJson(GeometryCollection instance) =>
-    <String, dynamic>{
-      'type': _$GeoJSONObjectTypeEnumMap[instance.type]!,
-      'bbox': instance.bbox?.toJson(),
-      'geometries': instance.geometries.map((e) => e.toJson()).toList(),
-    };
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['coordinates'] = instance.coordinates
+      .map((e) => e.map((e) => e.map((e) => e.toJson()).toList()).toList())
+      .toList();
+  return val;
+}
+
+Map<String, dynamic> _$GeometryCollectionToJson(GeometryCollection instance) {
+  final val = <String, dynamic>{
+    'type': _$GeoJSONObjectTypeEnumMap[instance.type]!,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('bbox', instance.bbox?.toJson());
+  val['geometries'] = instance.geometries.map((e) => e.toJson()).toList();
+  return val;
+}
 
 const _$GeoJSONObjectTypeEnumMap = {
   GeoJSONObjectType.point: 'Point',
