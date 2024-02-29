@@ -9,6 +9,84 @@ import 'dart:io';
 //import 'package:turf/helpers.dart';
 
 void main() {
+  group('serialization on null values', () {
+    final bbox = BBox(1, 2, 3, 4);
+
+    test('Point', () {
+      final first = Point(coordinates: Position(0, 0)).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = Point(coordinates: Position(0, 0), bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('MultiPoint', () {
+      final first = MultiPoint(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = MultiPoint(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('LineString', () {
+      final first = LineString(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = LineString(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('MultiLineString', () {
+      final first = MultiLineString(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = MultiLineString(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('Polygon', () {
+      final first = Polygon(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = Polygon(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('MultiPolygon', () {
+      final first = MultiPolygon(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = MultiPolygon(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('Feature', () {
+      final first = Feature().toJson();
+      expect(first.containsKey('bbox'), false);
+      expect(first.containsKey('properties'), true);
+      expect(first.containsKey('geometry'), true);
+
+      final second = Feature(bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('GeometryCollection', () {
+      final first = GeometryCollection().toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = GeometryCollection(bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('GeometryCollection', () {
+      final first = GeometryCollection().toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = GeometryCollection(bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+  });
+
   group('Coordinate Types:', () {
     test('Position', () {
       void expectArgs(Position pos) {

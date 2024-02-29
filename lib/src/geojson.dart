@@ -634,7 +634,7 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
   Feature({
     BBox? bbox,
     this.id,
-    this.properties = const {},
+    this.properties,
     this.geometry,
     this.fields = const {},
   }) : super.withType(GeoJSONObjectType.feature, bbox: bbox);
@@ -685,8 +685,9 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
   @override
   Map<String, dynamic> toJson() => super.serialize({
         if (id != null) 'id': id,
-        if (geometry != null) 'geometry': geometry!.toJson(),
-        if (geometry != null) 'properties': properties,
+        if (bbox != null) 'bbox': bbox,
+        'geometry': geometry?.toJson(),
+        'properties': properties,
         ...fields,
       });
 
