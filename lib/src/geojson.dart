@@ -683,9 +683,9 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
 
   @override
   Map<String, dynamic> toJson() => super.serialize({
-        'id': id,
-        'geometry': geometry!.toJson(),
-        'properties': properties,
+        if (id != null) 'id': id,
+        if (geometry != null) 'geometry': geometry!.toJson(),
+        if (geometry != null) 'properties': properties,
         ...fields,
       });
 
@@ -721,7 +721,7 @@ class FeatureCollection<T extends GeometryObject> extends GeoJSONObject {
   @override
   Map<String, dynamic> toJson() => super.serialize(<String, dynamic>{
         'features': features.map((e) => e.toJson()).toList(),
-        'bbox': bbox?.toJson(),
+        if (bbox != null) 'bbox': bbox!.toJson(),
       });
 
   @override
