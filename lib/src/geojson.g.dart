@@ -6,14 +6,17 @@ part of 'geojson.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Point _$PointFromJson(Map<String, dynamic> json) => Point(
-      bbox: json['bbox'] == null
-          ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: Position.fromJson(
-          (json['coordinates'] as List<dynamic>).map((e) => e as num).toList()),
-    );
+Point _$PointFromJson(Map<String, dynamic> json) {
+  validateGeoJson(json).check();
+  return Point(
+    bbox: json['bbox'] == null
+        ? null
+        : BBox.fromJson(
+            (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+    coordinates: Position.fromJson(
+        (json['coordinates'] as List<dynamic>).map((e) => e as num).toList()),
+  );
+}
 
 Map<String, dynamic> _$PointToJson(Point instance) {
   final val = <String, dynamic>{};
@@ -29,17 +32,20 @@ Map<String, dynamic> _$PointToJson(Point instance) {
   return val;
 }
 
-MultiPoint _$MultiPointFromJson(Map<String, dynamic> json) => MultiPoint(
-      bbox: json['bbox'] == null
-          ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => Position.fromJson(
-                  (e as List<dynamic>).map((e) => e as num).toList()))
-              .toList() ??
-          const [],
-    );
+MultiPoint _$MultiPointFromJson(Map<String, dynamic> json) {
+  validateGeoJson(json).check();
+  return MultiPoint(
+    bbox: json['bbox'] == null
+        ? null
+        : BBox.fromJson(
+            (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+    coordinates: (json['coordinates'] as List<dynamic>?)
+            ?.map((e) => Position.fromJson(
+                (e as List<dynamic>).map((e) => e as num).toList()))
+            .toList() ??
+        const [],
+  );
+}
 
 Map<String, dynamic> _$MultiPointToJson(MultiPoint instance) {
   final val = <String, dynamic>{};
@@ -55,17 +61,20 @@ Map<String, dynamic> _$MultiPointToJson(MultiPoint instance) {
   return val;
 }
 
-LineString _$LineStringFromJson(Map<String, dynamic> json) => LineString(
-      bbox: json['bbox'] == null
-          ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => Position.fromJson(
-                  (e as List<dynamic>).map((e) => e as num).toList()))
-              .toList() ??
-          const [],
-    );
+LineString _$LineStringFromJson(Map<String, dynamic> json) {
+  validateGeoJson(json).check();
+  return LineString(
+    bbox: json['bbox'] == null
+        ? null
+        : BBox.fromJson(
+            (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+    coordinates: (json['coordinates'] as List<dynamic>?)
+            ?.map((e) => Position.fromJson(
+                (e as List<dynamic>).map((e) => e as num).toList()))
+            .toList() ??
+        const [],
+  );
+}
 
 Map<String, dynamic> _$LineStringToJson(LineString instance) {
   final val = <String, dynamic>{};
@@ -81,20 +90,22 @@ Map<String, dynamic> _$LineStringToJson(LineString instance) {
   return val;
 }
 
-MultiLineString _$MultiLineStringFromJson(Map<String, dynamic> json) =>
-    MultiLineString(
-      bbox: json['bbox'] == null
-          ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => (e as List<dynamic>)
-                  .map((e) => Position.fromJson(
-                      (e as List<dynamic>).map((e) => e as num).toList()))
-                  .toList())
-              .toList() ??
-          const [],
-    );
+MultiLineString _$MultiLineStringFromJson(Map<String, dynamic> json) {
+  validateGeoJson(json).check();
+  return MultiLineString(
+    bbox: json['bbox'] == null
+        ? null
+        : BBox.fromJson(
+            (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+    coordinates: (json['coordinates'] as List<dynamic>?)
+            ?.map((e) => (e as List<dynamic>)
+                .map((e) => Position.fromJson(
+                    (e as List<dynamic>).map((e) => e as num).toList()))
+                .toList())
+            .toList() ??
+        const [],
+  );
+}
 
 Map<String, dynamic> _$MultiLineStringToJson(MultiLineString instance) {
   final val = <String, dynamic>{};
@@ -112,19 +123,22 @@ Map<String, dynamic> _$MultiLineStringToJson(MultiLineString instance) {
   return val;
 }
 
-Polygon _$PolygonFromJson(Map<String, dynamic> json) => Polygon(
-      bbox: json['bbox'] == null
-          ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => (e as List<dynamic>)
-                  .map((e) => Position.fromJson(
-                      (e as List<dynamic>).map((e) => e as num).toList()))
-                  .toList())
-              .toList() ??
-          const [],
-    );
+Polygon _$PolygonFromJson(Map<String, dynamic> json) {
+  validateGeoJson(json).check();
+  return Polygon(
+    bbox: json['bbox'] == null
+        ? null
+        : BBox.fromJson(
+            (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+    coordinates: (json['coordinates'] as List<dynamic>?)
+            ?.map((e) => (e as List<dynamic>)
+                .map((e) => Position.fromJson(
+                    (e as List<dynamic>).map((e) => e as num).toList()))
+                .toList())
+            .toList() ??
+        const [],
+  );
+}
 
 Map<String, dynamic> _$PolygonToJson(Polygon instance) {
   final val = <String, dynamic>{};
@@ -142,21 +156,24 @@ Map<String, dynamic> _$PolygonToJson(Polygon instance) {
   return val;
 }
 
-MultiPolygon _$MultiPolygonFromJson(Map<String, dynamic> json) => MultiPolygon(
-      bbox: json['bbox'] == null
-          ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => (e as List<dynamic>)
-                  .map((e) => (e as List<dynamic>)
-                      .map((e) => Position.fromJson(
-                          (e as List<dynamic>).map((e) => e as num).toList()))
-                      .toList())
-                  .toList())
-              .toList() ??
-          const [],
-    );
+MultiPolygon _$MultiPolygonFromJson(Map<String, dynamic> json) {
+  validateGeoJson(json).check();
+  return MultiPolygon(
+    bbox: json['bbox'] == null
+        ? null
+        : BBox.fromJson(
+            (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+    coordinates: (json['coordinates'] as List<dynamic>?)
+            ?.map((e) => (e as List<dynamic>)
+                .map((e) => (e as List<dynamic>)
+                    .map((e) => Position.fromJson(
+                        (e as List<dynamic>).map((e) => e as num).toList()))
+                    .toList())
+                .toList())
+            .toList() ??
+        const [],
+  );
+}
 
 Map<String, dynamic> _$MultiPolygonToJson(MultiPolygon instance) {
   final val = <String, dynamic>{};

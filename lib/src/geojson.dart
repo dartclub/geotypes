@@ -1,3 +1,5 @@
+import 'package:geotypes/src/validation/geojson.dart';
+import 'package:geotypes/src/validation/validation_hint.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'geojson.g.dart';
@@ -22,6 +24,10 @@ enum GeoJSONObjectType {
   feature,
   @JsonValue('FeatureCollection')
   featureCollection,
+}
+
+extension GeoJSONObjectTypeExtensions on GeoJSONObjectType {
+  String get jsonValue => _$GeoJSONObjectTypeEnumMap[this]!;
 }
 
 abstract class GeoJSONObject {
@@ -600,18 +606,20 @@ class GeometryCollection extends GeometryObject {
   GeometryCollection({BBox? bbox, this.geometries = const []})
       : super.withType(GeoJSONObjectType.geometryCollection, bbox: bbox);
 
-  factory GeometryCollection.fromJson(Map<String, dynamic> json) =>
-      GeometryCollection(
-        bbox: json['bbox'] == null
-            ? null
-            : BBox.fromJson(
-                (json['bbox'] as List).map((e) => e as num).toList(),
-              ),
-        geometries: (json['geometries'] as List?)
-                ?.map((e) => GeometryType.deserialize(e))
-                .toList() ??
-            const [],
-      );
+  factory GeometryCollection.fromJson(Map<String, dynamic> json) {
+    validateGeoJson(json).check();
+    return GeometryCollection(
+      bbox: json['bbox'] == null
+          ? null
+          : BBox.fromJson(
+              (json['bbox'] as List).map((e) => e as num).toList(),
+            ),
+      geometries: (json['geometries'] as List?)
+              ?.map((e) => GeometryType.deserialize(e))
+              .toList() ??
+          const [],
+    );
+  }
 
   @override
   Map<String, dynamic> toJson() =>
@@ -639,25 +647,25 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
     this.fields = const {},
   }) : super.withType(GeoJSONObjectType.feature, bbox: bbox);
 
-  factory Feature.fromJson(Map<String, dynamic> json) => Feature(
-        id: json['id'],
-        geometry: json['geometry'] == null
-            ? null
-            : GeometryObject.deserialize(json['geometry']) as T,
-        properties: json['properties'],
-        bbox: json['bbox'] == null
-            ? null
-            : BBox.fromJson(
-                (json['bbox'] as List).map((e) => e as num).toList()),
-        fields: Map.fromEntries(
-          json.entries.where(
-            (el) =>
-                el.key != 'geometry' &&
-                el.key != 'properties' &&
-                el.key != 'id',
-          ),
+  factory Feature.fromJson(Map<String, dynamic> json) {
+    validateGeoJson(json).check();
+    return Feature(
+      id: json['id'],
+      geometry: json['geometry'] == null
+          ? null
+          : GeometryObject.deserialize(json['geometry']) as T,
+      properties: json['properties'],
+      bbox: json['bbox'] == null
+          ? null
+          : BBox.fromJson((json['bbox'] as List).map((e) => e as num).toList()),
+      fields: Map.fromEntries(
+        json.entries.where(
+          (el) =>
+              el.key != 'geometry' && el.key != 'properties' && el.key != 'id',
         ),
-      );
+      ),
+    );
+  }
 
   dynamic operator [](String key) {
     switch (key) {
@@ -708,17 +716,18 @@ class FeatureCollection<T extends GeometryObject> extends GeoJSONObject {
   FeatureCollection({BBox? bbox, this.features = const []})
       : super.withType(GeoJSONObjectType.featureCollection, bbox: bbox);
 
-  factory FeatureCollection.fromJson(Map<String, dynamic> json) =>
-      FeatureCollection(
-        bbox: json['bbox'] == null
-            ? null
-            : BBox.fromJson(
-                (json['bbox'] as List).map((e) => e as num).toList()),
-        features: (json['features'] as List<dynamic>?)
-                ?.map((e) => Feature<T>.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            const [],
-      );
+  factory FeatureCollection.fromJson(Map<String, dynamic> json) {
+    validateGeoJson(json).check();
+    return FeatureCollection(
+      bbox: json['bbox'] == null
+          ? null
+          : BBox.fromJson((json['bbox'] as List).map((e) => e as num).toList()),
+      features: (json['features'] as List<dynamic>?)
+              ?.map((e) => Feature<T>.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+  }
 
   @override
   Map<String, dynamic> toJson() => super.serialize(<String, dynamic>{
