@@ -443,7 +443,9 @@ abstract class GeometryType<T> extends GeometryObject {
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Point extends GeometryType<Position> {
   Point({BBox? bbox, required Position coordinates})
-      : super.withType(coordinates, GeoJSONObjectType.point, bbox: bbox);
+      : super.withType(coordinates, GeoJSONObjectType.point, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory Point.fromJson(Map<String, dynamic> json) => _$PointFromJson(json);
 
@@ -469,7 +471,9 @@ class Point extends GeometryType<Position> {
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MultiPoint extends GeometryType<List<Position>> {
   MultiPoint({BBox? bbox, List<Position> coordinates = const []})
-      : super.withType(coordinates, GeoJSONObjectType.multiPoint, bbox: bbox);
+      : super.withType(coordinates, GeoJSONObjectType.multiPoint, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory MultiPoint.fromJson(Map<String, dynamic> json) =>
       _$MultiPointFromJson(json);
@@ -494,7 +498,9 @@ class MultiPoint extends GeometryType<List<Position>> {
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class LineString extends GeometryType<List<Position>> {
   LineString({BBox? bbox, List<Position> coordinates = const []})
-      : super.withType(coordinates, GeoJSONObjectType.lineString, bbox: bbox);
+      : super.withType(coordinates, GeoJSONObjectType.lineString, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory LineString.fromJson(Map<String, dynamic> json) =>
       _$LineStringFromJson(json);
@@ -519,7 +525,9 @@ class LineString extends GeometryType<List<Position>> {
 class MultiLineString extends GeometryType<List<List<Position>>> {
   MultiLineString({BBox? bbox, List<List<Position>> coordinates = const []})
       : super.withType(coordinates, GeoJSONObjectType.multiLineString,
-            bbox: bbox);
+            bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory MultiLineString.fromJson(Map<String, dynamic> json) =>
       _$MultiLineStringFromJson(json);
@@ -547,7 +555,9 @@ class MultiLineString extends GeometryType<List<List<Position>>> {
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Polygon extends GeometryType<List<List<Position>>> {
   Polygon({BBox? bbox, List<List<Position>> coordinates = const []})
-      : super.withType(coordinates, GeoJSONObjectType.polygon, bbox: bbox);
+      : super.withType(coordinates, GeoJSONObjectType.polygon, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory Polygon.fromJson(Map<String, dynamic> json) =>
       _$PolygonFromJson(json);
@@ -574,7 +584,10 @@ class Polygon extends GeometryType<List<List<Position>>> {
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MultiPolygon extends GeometryType<List<List<List<Position>>>> {
   MultiPolygon({BBox? bbox, List<List<List<Position>>> coordinates = const []})
-      : super.withType(coordinates, GeoJSONObjectType.multiPolygon, bbox: bbox);
+      : super.withType(coordinates, GeoJSONObjectType.multiPolygon,
+            bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory MultiPolygon.fromJson(Map<String, dynamic> json) =>
       _$MultiPolygonFromJson(json);
@@ -604,7 +617,9 @@ class GeometryCollection extends GeometryObject {
   List<GeometryType> geometries;
 
   GeometryCollection({BBox? bbox, this.geometries = const []})
-      : super.withType(GeoJSONObjectType.geometryCollection, bbox: bbox);
+      : super.withType(GeoJSONObjectType.geometryCollection, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory GeometryCollection.fromJson(Map<String, dynamic> json) {
     validateGeoJson(json).check();
@@ -645,7 +660,9 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
     this.properties,
     this.geometry,
     this.fields = const {},
-  }) : super.withType(GeoJSONObjectType.feature, bbox: bbox);
+  }) : super.withType(GeoJSONObjectType.feature, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory Feature.fromJson(Map<String, dynamic> json) {
     validateGeoJson(json).check();
@@ -693,7 +710,7 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
   @override
   Map<String, dynamic> toJson() => super.serialize({
         if (id != null) 'id': id,
-        if (bbox != null) 'bbox': bbox,
+        if (bbox != null) 'bbox': bbox!.toJson(),
         'geometry': geometry?.toJson(),
         'properties': properties,
         ...fields,
@@ -714,7 +731,9 @@ class FeatureCollection<T extends GeometryObject> extends GeoJSONObject {
   List<Feature<T>> features;
 
   FeatureCollection({BBox? bbox, this.features = const []})
-      : super.withType(GeoJSONObjectType.featureCollection, bbox: bbox);
+      : super.withType(GeoJSONObjectType.featureCollection, bbox: bbox) {
+    validateGeoJson(toJson()).check();
+  }
 
   factory FeatureCollection.fromJson(Map<String, dynamic> json) {
     validateGeoJson(json).check();

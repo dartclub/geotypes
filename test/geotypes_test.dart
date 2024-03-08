@@ -29,10 +29,11 @@ void main() {
     });
 
     test('LineString', () {
-      final first = LineString(coordinates: []).toJson();
+      final positions = [Position(0, 0), Position(1, 1)];
+      final first = LineString(coordinates: positions).toJson();
       expect(first.containsKey('bbox'), false);
 
-      final second = LineString(coordinates: [], bbox: bbox).toJson();
+      final second = LineString(coordinates: positions, bbox: bbox).toJson();
       expect(second.containsKey('bbox'), true);
     });
 
@@ -67,6 +68,9 @@ void main() {
       expect(first.containsKey('geometry'), true);
 
       final second = Feature(bbox: bbox).toJson();
+      final jsonString = JsonEncoder.withIndent(" ").convert(second);
+      print(jsonString);
+
       expect(second.containsKey('bbox'), true);
     });
 
@@ -439,6 +443,7 @@ void main() {
                         Position(100, 0),
                         Position(100, 1),
                         Position(101, 0),
+                        Position(100, 0),
                       ]
                     ],
                   ),
@@ -450,6 +455,7 @@ void main() {
                           Position(100, 0),
                           Position(100, 1),
                           Position(101, 0),
+                          Position(100, 0),
                         ]
                       ]),
                       Polygon(coordinates: [
@@ -457,6 +463,7 @@ void main() {
                           Position(100, 0),
                           Position(100, 1),
                           Position(101, 0),
+                          Position(100, 0),
                         ]
                       ])
                     ],
