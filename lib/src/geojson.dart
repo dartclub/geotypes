@@ -1,28 +1,17 @@
 import 'package:geotypes/src/validation/geojson.dart';
 import 'package:geotypes/src/validation/validation_hint.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'geojson.g.dart';
 
-@JsonEnum(alwaysCreate: true)
 enum GeoJSONObjectType {
-  @JsonValue('Point')
   point,
-  @JsonValue('MultiPoint')
   multiPoint,
-  @JsonValue('LineString')
   lineString,
-  @JsonValue('MultiLineString')
   multiLineString,
-  @JsonValue('Polygon')
   polygon,
-  @JsonValue('MultiPolygon')
   multiPolygon,
-  @JsonValue('GeometryCollection')
   geometryCollection,
-  @JsonValue('Feature')
   feature,
-  @JsonValue('FeatureCollection')
   featureCollection,
 }
 
@@ -440,7 +429,6 @@ abstract class GeometryType<T> extends GeometryObject {
 }
 
 /// Point, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.2
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Point extends GeometryType<Position> {
   Point({BBox? bbox, required Position coordinates})
       : super.withType(coordinates, GeoJSONObjectType.point, bbox: bbox) {
@@ -468,7 +456,6 @@ class Point extends GeometryType<Position> {
 }
 
 /// MultiPoint, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.3
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MultiPoint extends GeometryType<List<Position>> {
   MultiPoint({BBox? bbox, List<Position> coordinates = const []})
       : super.withType(coordinates, GeoJSONObjectType.multiPoint, bbox: bbox) {
@@ -495,7 +482,6 @@ class MultiPoint extends GeometryType<List<Position>> {
 }
 
 /// LineString, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.4
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class LineString extends GeometryType<List<Position>> {
   LineString({BBox? bbox, List<Position> coordinates = const []})
       : super.withType(coordinates, GeoJSONObjectType.lineString, bbox: bbox) {
@@ -521,7 +507,6 @@ class LineString extends GeometryType<List<Position>> {
 }
 
 /// MultiLineString, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.5
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MultiLineString extends GeometryType<List<List<Position>>> {
   MultiLineString({BBox? bbox, List<List<Position>> coordinates = const []})
       : super.withType(coordinates, GeoJSONObjectType.multiLineString,
@@ -552,7 +537,6 @@ class MultiLineString extends GeometryType<List<List<Position>>> {
 }
 
 /// Polygon, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.6
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Polygon extends GeometryType<List<List<Position>>> {
   Polygon({BBox? bbox, List<List<Position>> coordinates = const []})
       : super.withType(coordinates, GeoJSONObjectType.polygon, bbox: bbox) {
@@ -581,7 +565,6 @@ class Polygon extends GeometryType<List<List<Position>>> {
 }
 
 /// MultiPolygon, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.7
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MultiPolygon extends GeometryType<List<List<List<Position>>>> {
   MultiPolygon({BBox? bbox, List<List<List<Position>>> coordinates = const []})
       : super.withType(coordinates, GeoJSONObjectType.multiPolygon,
@@ -611,8 +594,6 @@ class MultiPolygon extends GeometryType<List<List<List<Position>>>> {
 }
 
 /// GeometryCollection, as specified here https://tools.ietf.org/html/rfc7946#section-3.1.8
-@JsonSerializable(
-    explicitToJson: true, createFactory: false, includeIfNull: false)
 class GeometryCollection extends GeometryObject {
   List<GeometryType> geometries;
 
