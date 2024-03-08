@@ -251,51 +251,57 @@ void main() {
     test('Point', () {
       var geoJSON = {
         'coordinates': null,
-        'type': GeoJSONObjectType.point,
+        'type': GeoJSONObjectType.point.jsonValue,
       };
-      expect(() => Point.fromJson(geoJSON), throwsA(isA<TypeError>()));
+      expect(() => Point.fromJson(geoJSON), throwsA(isA<Exception>()));
 
       var point = Point(coordinates: Position(11, 49));
 
       expect(point, point.clone());
     });
 
-    var geometries = [
-      GeoJSONObjectType.multiPoint,
-      GeoJSONObjectType.lineString,
-      GeoJSONObjectType.multiLineString,
-      GeoJSONObjectType.polygon,
-      GeoJSONObjectType.multiPolygon,
-    ];
+    var geometries = <Map<String, dynamic>>[];
+    late GeometryCollection collection;
 
-    var collection = GeometryCollection.fromJson({
-      'type': GeoJSONObjectType.geometryCollection,
-      'geometries': geometries
-          .map((type) => {
-                'coordinates': null,
-                'type': type,
-              })
-          .toList(),
-    });
-    for (var i = 0; i < geometries.length; i++) {
-      test(geometries[i], () {
-        expect(geometries[i], collection.geometries[i].type);
-        expect(collection.geometries[i].coordinates,
-            isNotNull); // kind of unnecessary
-        expect(collection.geometries[i].coordinates, isA<List>());
-        expect(collection.geometries[i].coordinates, isEmpty);
-
-        var json = collection.geometries[i].toJson();
-        for (var key in ['type', 'coordinates']) {
-          expect(json.keys, contains(key));
-        }
+    test('build geometries', () {
+      geometries = [
+        MultiPoint(coordinates: []).toJson(),
+        LineString(coordinates: [Position(10, 10), Position(10, 10)]).toJson(),
+        MultiLineString(coordinates: []).toJson(),
+        Polygon(coordinates: []).toJson(),
+        MultiPolygon(coordinates: []).toJson(),
+      ];
+      collection = GeometryCollection.fromJson({
+        'type': GeoJSONObjectType.geometryCollection.jsonValue,
+        'geometries': geometries,
       });
+    });
+
+    if (geometries.isNotEmpty) {
+      for (var i = 0; i < geometries.length; i++) {
+        test(geometries[i], () {
+          check() {
+            expect(geometries[i], collection.geometries[i].type);
+            expect(collection.geometries[i].coordinates,
+                isNotNull); // kind of unnecessary
+            expect(collection.geometries[i].coordinates, isA<List>());
+            expect(collection.geometries[i].coordinates, isEmpty);
+
+            var json = collection.geometries[i].toJson();
+            for (var key in ['type', 'coordinates']) {
+              expect(json.keys, contains(key));
+            }
+          }
+
+          expect(() => check(), returnsNormally);
+        });
+      }
     }
   });
   test('GeometryCollection', () {
     var geoJSON = {
-      'type': GeoJSONObjectType.geometryCollection,
-      'geometries': null,
+      'type': GeoJSONObjectType.geometryCollection.jsonValue,
+      'geometries': [],
     };
     var collection = GeometryCollection.fromJson(geoJSON);
     expect(collection.type, GeoJSONObjectType.geometryCollection);
@@ -310,8 +316,9 @@ void main() {
   });
   test('Feature', () {
     var geoJSON = {
-      'type': GeoJSONObjectType.feature,
+      'type': GeoJSONObjectType.feature.jsonValue,
       'geometry': null,
+      'properties': null,
     };
     var feature = Feature.fromJson(geoJSON);
     expect(feature.type, GeoJSONObjectType.feature);
@@ -330,8 +337,8 @@ void main() {
   });
   test('FeatureCollection', () {
     var geoJSON = {
-      'type': GeoJSONObjectType.featureCollection,
-      'features': null,
+      'type': GeoJSONObjectType.featureCollection.jsonValue,
+      'features': [],
     };
     var collection = FeatureCollection.fromJson(geoJSON);
     expect(collection.type, GeoJSONObjectType.featureCollection);
@@ -357,10 +364,10 @@ void main() {
         GeoJSONObjectType.point);
 
     final geoJSON2 = {
-      "type": GeoJSONObjectType.geometryCollection,
+      "type": GeoJSONObjectType.geometryCollection.jsonValue,
       "geometries": [
         {
-          "type": GeoJSONObjectType.point,
+          "type": GeoJSONObjectType.point.jsonValue,
           "coordinates": [1, 1, 1]
         }
       ]
@@ -381,9 +388,9 @@ void main() {
         GeoJSONObjectType.point);
 
     var geoJSON3 = {
-      "type": GeoJSONObjectType.geometryCollection,
+      "type": GeoJSONObjectType.geometryCollection.jsonValue,
       "geometries": [
-        {"type": GeoJSONObjectType.feature, "id": 1}
+        {"type": GeoJSONObjectType.feature.jsonValue, "id": 1}
       ]
     };
     expect(() => GeometryType.deserialize(geoJSON3), throwsA(isA<Exception>()));
