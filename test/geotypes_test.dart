@@ -9,6 +9,88 @@ import 'dart:io';
 //import 'package:turf/helpers.dart';
 
 void main() {
+  group('serialization on null values', () {
+    final bbox = BBox(1, 2, 3, 4);
+
+    test('Point', () {
+      final first = Point(coordinates: Position(0, 0)).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = Point(coordinates: Position(0, 0), bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('MultiPoint', () {
+      final first = MultiPoint(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = MultiPoint(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('LineString', () {
+      final positions = [Position(0, 0), Position(1, 1)];
+      final first = LineString(coordinates: positions).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = LineString(coordinates: positions, bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('MultiLineString', () {
+      final first = MultiLineString(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = MultiLineString(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('Polygon', () {
+      final first = Polygon(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = Polygon(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('MultiPolygon', () {
+      final first = MultiPolygon(coordinates: []).toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = MultiPolygon(coordinates: [], bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('Feature', () {
+      final first = Feature().toJson();
+      expect(first.containsKey('bbox'), false);
+      expect(first.containsKey('properties'), true);
+      expect(first.containsKey('geometry'), true);
+
+      final second = Feature(bbox: bbox).toJson();
+      final jsonString = JsonEncoder.withIndent(" ").convert(second);
+      print(jsonString);
+
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('GeometryCollection', () {
+      final first = GeometryCollection().toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = GeometryCollection(bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+
+    test('GeometryCollection', () {
+      final first = GeometryCollection().toJson();
+      expect(first.containsKey('bbox'), false);
+
+      final second = GeometryCollection(bbox: bbox).toJson();
+      expect(second.containsKey('bbox'), true);
+    });
+  });
+
   group('Coordinate Types:', () {
     test('Position', () {
       void expectArgs(Position pos) {
@@ -173,51 +255,57 @@ void main() {
     test('Point', () {
       var geoJSON = {
         'coordinates': null,
-        'type': GeoJSONObjectType.point,
+        'type': GeoJSONObjectType.point.jsonValue,
       };
-      expect(() => Point.fromJson(geoJSON), throwsA(isA<TypeError>()));
+      expect(() => Point.fromJson(geoJSON), throwsA(isA<Exception>()));
 
       var point = Point(coordinates: Position(11, 49));
 
       expect(point, point.clone());
     });
 
-    var geometries = [
-      GeoJSONObjectType.multiPoint,
-      GeoJSONObjectType.lineString,
-      GeoJSONObjectType.multiLineString,
-      GeoJSONObjectType.polygon,
-      GeoJSONObjectType.multiPolygon,
-    ];
+    var geometries = <Map<String, dynamic>>[];
+    late GeometryCollection collection;
 
-    var collection = GeometryCollection.fromJson({
-      'type': GeoJSONObjectType.geometryCollection,
-      'geometries': geometries
-          .map((type) => {
-                'coordinates': null,
-                'type': type,
-              })
-          .toList(),
-    });
-    for (var i = 0; i < geometries.length; i++) {
-      test(geometries[i], () {
-        expect(geometries[i], collection.geometries[i].type);
-        expect(collection.geometries[i].coordinates,
-            isNotNull); // kind of unnecessary
-        expect(collection.geometries[i].coordinates, isA<List>());
-        expect(collection.geometries[i].coordinates, isEmpty);
-
-        var json = collection.geometries[i].toJson();
-        for (var key in ['type', 'coordinates']) {
-          expect(json.keys, contains(key));
-        }
+    test('build geometries', () {
+      geometries = [
+        MultiPoint(coordinates: []).toJson(),
+        LineString(coordinates: [Position(10, 10), Position(10, 10)]).toJson(),
+        MultiLineString(coordinates: []).toJson(),
+        Polygon(coordinates: []).toJson(),
+        MultiPolygon(coordinates: []).toJson(),
+      ];
+      collection = GeometryCollection.fromJson({
+        'type': GeoJSONObjectType.geometryCollection.jsonValue,
+        'geometries': geometries,
       });
+    });
+
+    if (geometries.isNotEmpty) {
+      for (var i = 0; i < geometries.length; i++) {
+        test(geometries[i], () {
+          check() {
+            expect(geometries[i], collection.geometries[i].type);
+            expect(collection.geometries[i].coordinates,
+                isNotNull); // kind of unnecessary
+            expect(collection.geometries[i].coordinates, isA<List>());
+            expect(collection.geometries[i].coordinates, isEmpty);
+
+            var json = collection.geometries[i].toJson();
+            for (var key in ['type', 'coordinates']) {
+              expect(json.keys, contains(key));
+            }
+          }
+
+          expect(() => check(), returnsNormally);
+        });
+      }
     }
   });
   test('GeometryCollection', () {
     var geoJSON = {
-      'type': GeoJSONObjectType.geometryCollection,
-      'geometries': null,
+      'type': GeoJSONObjectType.geometryCollection.jsonValue,
+      'geometries': [],
     };
     var collection = GeometryCollection.fromJson(geoJSON);
     expect(collection.type, GeoJSONObjectType.geometryCollection);
@@ -232,8 +320,9 @@ void main() {
   });
   test('Feature', () {
     var geoJSON = {
-      'type': GeoJSONObjectType.feature,
+      'type': GeoJSONObjectType.feature.jsonValue,
       'geometry': null,
+      'properties': null,
     };
     var feature = Feature.fromJson(geoJSON);
     expect(feature.type, GeoJSONObjectType.feature);
@@ -252,8 +341,8 @@ void main() {
   });
   test('FeatureCollection', () {
     var geoJSON = {
-      'type': GeoJSONObjectType.featureCollection,
-      'features': null,
+      'type': GeoJSONObjectType.featureCollection.jsonValue,
+      'features': [],
     };
     var collection = FeatureCollection.fromJson(geoJSON);
     expect(collection.type, GeoJSONObjectType.featureCollection);
@@ -279,10 +368,10 @@ void main() {
         GeoJSONObjectType.point);
 
     final geoJSON2 = {
-      "type": GeoJSONObjectType.geometryCollection,
+      "type": GeoJSONObjectType.geometryCollection.jsonValue,
       "geometries": [
         {
-          "type": GeoJSONObjectType.point,
+          "type": GeoJSONObjectType.point.jsonValue,
           "coordinates": [1, 1, 1]
         }
       ]
@@ -303,9 +392,9 @@ void main() {
         GeoJSONObjectType.point);
 
     var geoJSON3 = {
-      "type": GeoJSONObjectType.geometryCollection,
+      "type": GeoJSONObjectType.geometryCollection.jsonValue,
       "geometries": [
-        {"type": GeoJSONObjectType.feature, "id": 1}
+        {"type": GeoJSONObjectType.feature.jsonValue, "id": 1}
       ]
     };
     expect(() => GeometryType.deserialize(geoJSON3), throwsA(isA<Exception>()));
@@ -354,6 +443,7 @@ void main() {
                         Position(100, 0),
                         Position(100, 1),
                         Position(101, 0),
+                        Position(100, 0),
                       ]
                     ],
                   ),
@@ -365,6 +455,7 @@ void main() {
                           Position(100, 0),
                           Position(100, 1),
                           Position(101, 0),
+                          Position(100, 0),
                         ]
                       ]),
                       Polygon(coordinates: [
@@ -372,6 +463,7 @@ void main() {
                           Position(100, 0),
                           Position(100, 1),
                           Position(101, 0),
+                          Position(100, 0),
                         ]
                       ])
                     ],

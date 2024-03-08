@@ -1,7 +1,7 @@
 # GeoTypes
-A lightweight library for GeoJSON data types available dart and flutter.
+A lightweight GeoJson library for dart and Flutter.
 
-This library intentionally maintains a focused scope, enabling GeoTypes to serve as a foundational element for a wide range of geospatial applications.
+This library provides a simple and efficient way to work with GeoJson data in Dart and Flutter. It is designed to be easy to use, and to provide a clean and consistent API for working with geospatial data. Therefore we intentionally maintains a limited scope, enabling GeoTypes to serve as a foundational element for a wide range of geospatial applications.
 
 To leverage advanced geospatial analysis features, explore [turf.dart](https://github.com/dartclub/turf_dart), a Dart adaptation of the widely-used [turf.js](https://github.com/Turfjs/turf) library.
 
