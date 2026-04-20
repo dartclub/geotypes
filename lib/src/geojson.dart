@@ -67,26 +67,26 @@ abstract class GeoJSONObject {
 }
 
 /// Coordinate types, following https://tools.ietf.org/html/rfc7946#section-4
-abstract class CoordinateType implements Iterable<num> {
-  final List<num> _items;
+abstract class CoordinateType implements Iterable<double> {
+  final List<double> _items;
 
-  CoordinateType(List<num> list) : _items = List.of(list, growable: false);
-
-  @override
-  num get first => _items.first;
+  CoordinateType(List<double> list) : _items = List.of(list, growable: false);
 
   @override
-  num get last => _items.last;
+  double get first => _items.first;
+
+  @override
+  double get last => _items.last;
 
   @override
   int get length => _items.length;
 
-  num? operator [](int index) => _items[index];
+  double? operator [](int index) => _items[index];
 
-  void operator []=(int index, num value) => _items[index] = value;
+  void operator []=(int index, double value) => _items[index] = value;
 
   @override
-  bool any(bool Function(num element) test) => _items.any(test);
+  bool any(bool Function(double element) test) => _items.any(test);
 
   @override
   List<R> cast<R>() => _items.cast<R>();
@@ -95,28 +95,31 @@ abstract class CoordinateType implements Iterable<num> {
   bool contains(Object? element) => _items.contains(element);
 
   @override
-  num elementAt(int index) => _items.elementAt(index);
+  double elementAt(int index) => _items.elementAt(index);
 
   @override
-  bool every(bool Function(num element) test) => _items.every(test);
+  bool every(bool Function(double element) test) => _items.every(test);
 
   @override
-  Iterable<T> expand<T>(Iterable<T> Function(num element) f) =>
+  Iterable<T> expand<T>(Iterable<T> Function(double element) f) =>
       _items.expand<T>(f);
 
   @override
-  num firstWhere(bool Function(num element) test, {num Function()? orElse}) =>
+  double firstWhere(bool Function(double element) test,
+          {double Function()? orElse}) =>
       _items.firstWhere(test);
 
   @override
-  T fold<T>(T initialValue, T Function(T previousValue, num element) combine) =>
+  T fold<T>(T initialValue,
+          T Function(T previousValue, double element) combine) =>
       _items.fold<T>(initialValue, combine);
 
   @override
-  Iterable<num> followedBy(Iterable<num> other) => _items.followedBy(other);
+  Iterable<double> followedBy(Iterable<double> other) =>
+      _items.followedBy(other);
 
   @override
-  void forEach(void Function(num element) f) => _items.forEach(f);
+  void forEach(void Function(double element) f) => _items.forEach(f);
 
   @override
   bool get isEmpty => _items.isEmpty;
@@ -125,56 +128,59 @@ abstract class CoordinateType implements Iterable<num> {
   bool get isNotEmpty => _items.isNotEmpty;
 
   @override
-  Iterator<num> get iterator => _items.iterator;
+  Iterator<double> get iterator => _items.iterator;
 
   @override
   String join([String separator = '']) => _items.join(separator);
 
   @override
-  num lastWhere(bool Function(num element) test, {num Function()? orElse}) =>
+  double lastWhere(bool Function(double element) test,
+          {double Function()? orElse}) =>
       _items.lastWhere(test, orElse: orElse);
 
   @override
-  Iterable<T> map<T>(T Function(num e) f) => _items.map(f);
+  Iterable<T> map<T>(T Function(double e) f) => _items.map(f);
 
   @override
-  num reduce(num Function(num value, num element) combine) =>
+  double reduce(double Function(double value, double element) combine) =>
       _items.reduce(combine);
 
   @override
-  num get single => _items.single;
+  double get single => _items.single;
 
   @override
-  num singleWhere(bool Function(num element) test, {num Function()? orElse}) =>
+  double singleWhere(bool Function(double element) test,
+          {double Function()? orElse}) =>
       _items.singleWhere(test, orElse: orElse);
 
   @override
-  Iterable<num> skip(int count) => _items.skip(count);
+  Iterable<double> skip(int count) => _items.skip(count);
 
   @override
-  Iterable<num> skipWhile(bool Function(num value) test) =>
+  Iterable<double> skipWhile(bool Function(double value) test) =>
       _items.skipWhile(test);
 
   @override
-  Iterable<num> take(int count) => _items.take(count);
+  Iterable<double> take(int count) => _items.take(count);
 
   @override
-  Iterable<num> takeWhile(bool Function(num value) test) =>
+  Iterable<double> takeWhile(bool Function(double value) test) =>
       _items.takeWhile(test);
 
   @override
-  List<num> toList({bool growable = true}) => _items;
+  List<double> toList({bool growable = true}) => _items;
 
   @override
-  Set<num> toSet() => _items.toSet();
+  Set<double> toSet() => _items.toSet();
 
   @override
-  Iterable<num> where(bool Function(num element) test) => _items.where(test);
+  Iterable<double> where(bool Function(double element) test) =>
+      _items.where(test);
 
   @override
   Iterable<T> whereType<T>() => _items.whereType<T>();
 
-  List<num> toJson() => _items;
+  List<double> toJson() => _items;
 
   CoordinateType clone();
 
@@ -182,9 +188,9 @@ abstract class CoordinateType implements Iterable<num> {
 
   bool get isSigned;
 
-  num _untilSigned(num val, limit) {
+  double _untilSigned(double val, double limit) {
     if (val > limit) {
-      return _untilSigned(val - 360, limit);
+      return _untilSigned(val - 360.0, limit);
     } else {
       return val;
     }
@@ -195,14 +201,14 @@ abstract class CoordinateType implements Iterable<num> {
 /// Please make sure, you arrange your parameters like this:
 /// 1. Longitude, 2. Latitude, 3. Altitude (optional)
 class Position extends CoordinateType {
-  Position(num lng, num lat, [num? alt])
+  Position(double lng, double lat, [double? alt])
       : super([
           lng,
           lat,
           if (alt != null) alt,
         ]);
 
-  Position.named({required num lat, required num lng, num? alt})
+  Position.named({required double lat, required double lng, double? alt})
       : super([
           lng,
           lat,
@@ -210,7 +216,9 @@ class Position extends CoordinateType {
         ]);
 
   /// Position.of([<Lng>, <Lat>, <Alt (optional)>])
-  Position.of(super.list) : assert(list.length >= 2 && list.length <= 3);
+  Position.of(List<num> list)
+      : assert(list.length >= 2 && list.length <= 3),
+        super(list.map((e) => e.toDouble()).toList());
 
   factory Position.fromJson(List<num> list) => Position.of(list);
 
@@ -226,7 +234,7 @@ class Position extends CoordinateType {
         if (alt != null && p.alt != null) alt! - p.alt!,
       ]);
 
-  num dotProduct(Position p) =>
+  double dotProduct(Position p) =>
       (lng * p.lng) +
       (lat * p.lat) +
       (alt != null && p.alt != null ? (alt! * p.alt!) : 0);
@@ -244,19 +252,19 @@ class Position extends CoordinateType {
 
   Position operator *(Position p) => crossProduct(p);
 
-  num get lng => _items[0];
+  double get lng => _items[0];
 
-  num get lat => _items[1];
+  double get lat => _items[1];
 
-  num? get alt => length == 3 ? _items[2] : null;
+  double? get alt => length == 3 ? _items[2] : null;
 
   @override
   bool get isSigned => lng <= 180 && lat <= 90;
 
   @override
   Position toSigned() => Position.named(
-        lng: _untilSigned(lng, 180),
-        lat: _untilSigned(lat, 90),
+        lng: _untilSigned(lng, 180.0),
+        lat: _untilSigned(lat, 90.0),
         alt: alt,
       );
 
@@ -281,21 +289,21 @@ class Position extends CoordinateType {
 class BBox extends CoordinateType {
   BBox(
     /// longitude 1
-    num lng1,
+    double lng1,
 
     /// latitude 1
-    num lat1,
+    double lat1,
 
     /// longitude 2 for 2 dim. positions; altitude 1 for 3 dim. positions
-    num alt1,
+    double alt1,
 
     /// latitude 2 for 2 dim. positions; longitude 2 for 3 dim. positions
-    num lng2, [
+    double lng2, [
     /// latitude 2 for 3 dim. positions
-    num? lat2,
+    double? lat2,
 
     /// altitude 2 for 3 dim. positions
-    num? alt2,
+    double? alt2,
   ]) : super([
           lng1,
           lat1,
@@ -306,12 +314,12 @@ class BBox extends CoordinateType {
         ]);
 
   BBox.named({
-    required num lng1,
-    required num lat1,
-    num? alt1,
-    required num lng2,
-    required num lat2,
-    num? alt2,
+    required double lng1,
+    required double lat1,
+    double? alt1,
+    required double lng2,
+    required double lat2,
+    double? alt2,
   }) : super([
           lng1,
           lat1,
@@ -322,31 +330,33 @@ class BBox extends CoordinateType {
         ]);
 
   /// Position.of([<Lng>, <Lat>, <Alt (optional)>])
-  BBox.of(super.list) : assert(list.length == 4 || list.length == 6);
+  BBox.of(List<num> list)
+      : assert(list.length == 4 || list.length == 6),
+        super(list.map((e) => e.toDouble()).toList());
 
   factory BBox.fromJson(List<num> list) => BBox.of(list);
 
   bool get _is3D => length == 6;
 
-  num get lng1 => _items[0];
+  double get lng1 => _items[0];
 
-  num get lat1 => _items[1];
+  double get lat1 => _items[1];
 
-  num? get alt1 => _is3D ? _items[2] : null;
+  double? get alt1 => _is3D ? _items[2] : null;
 
-  num get lng2 => _items[_is3D ? 3 : 2];
+  double get lng2 => _items[_is3D ? 3 : 2];
 
-  num get lat2 => _items[_is3D ? 4 : 3];
+  double get lat2 => _items[_is3D ? 4 : 3];
 
-  num? get alt2 => _is3D ? _items[5] : null;
+  double? get alt2 => _is3D ? _items[5] : null;
 
   BBox copyWith({
-    num? lng1,
-    num? lat1,
-    num? alt1,
-    num? lat2,
-    num? lng2,
-    num? alt2,
+    double? lng1,
+    double? lat1,
+    double? alt1,
+    double? lat2,
+    double? lng2,
+    double? alt2,
   }) =>
       BBox.named(
         lng1: lng1 ?? this.lng1,
@@ -367,10 +377,10 @@ class BBox extends CoordinateType {
   BBox toSigned() => BBox.named(
         alt1: alt1,
         alt2: alt2,
-        lat1: _untilSigned(lat1, 90),
-        lat2: _untilSigned(lat2, 90),
-        lng1: _untilSigned(lng1, 180),
-        lng2: _untilSigned(lng2, 180),
+        lat1: _untilSigned(lat1, 90.0),
+        lat2: _untilSigned(lat2, 90.0),
+        lng1: _untilSigned(lng1, 180.0),
+        lng2: _untilSigned(lng2, 180.0),
       );
 
   @override
@@ -604,7 +614,9 @@ class GeometryCollection extends GeometryObject {
         bbox: json['bbox'] == null
             ? null
             : BBox.fromJson(
-                (json['bbox'] as List).map((e) => e as num).toList(),
+                (json['bbox'] as List)
+                    .map((e) => (e as num).toDouble())
+                    .toList(),
               ),
         geometries: (json['geometries'] as List?)
                 ?.map((e) => GeometryType.deserialize(e))
@@ -646,8 +658,9 @@ class Feature<T extends GeometryObject> extends GeoJSONObject {
         properties: json['properties'],
         bbox: json['bbox'] == null
             ? null
-            : BBox.fromJson(
-                (json['bbox'] as List).map((e) => e as num).toList()),
+            : BBox.fromJson((json['bbox'] as List)
+                .map((e) => (e as num).toDouble())
+                .toList()),
         fields: Map.fromEntries(
           json.entries.where(
             (el) =>
@@ -710,8 +723,9 @@ class FeatureCollection<T extends GeometryObject> extends GeoJSONObject {
       FeatureCollection(
         bbox: json['bbox'] == null
             ? null
-            : BBox.fromJson(
-                (json['bbox'] as List).map((e) => e as num).toList()),
+            : BBox.fromJson((json['bbox'] as List)
+                .map((e) => (e as num).toDouble())
+                .toList()),
         features: (json['features'] as List<dynamic>?)
                 ?.map((e) => Feature<T>.fromJson(e as Map<String, dynamic>))
                 .toList() ??

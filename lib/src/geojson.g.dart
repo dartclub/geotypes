@@ -9,10 +9,12 @@ part of 'geojson.dart';
 Point _$PointFromJson(Map<String, dynamic> json) => Point(
       bbox: json['bbox'] == null
           ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
-      coordinates: Position.fromJson(
-          (json['coordinates'] as List<dynamic>).map((e) => e as num).toList()),
+          : BBox.fromJson((json['bbox'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()),
+      coordinates: Position.fromJson((json['coordinates'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList()),
     );
 
 Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
@@ -23,11 +25,13 @@ Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
 MultiPoint _$MultiPointFromJson(Map<String, dynamic> json) => MultiPoint(
       bbox: json['bbox'] == null
           ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+          : BBox.fromJson((json['bbox'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()),
       coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => Position.fromJson(
-                  (e as List<dynamic>).map((e) => e as num).toList()))
+              ?.map((e) => Position.fromJson((e as List<dynamic>)
+                  .map((e) => (e as num).toDouble())
+                  .toList()))
               .toList() ??
           const [],
     );
@@ -41,11 +45,13 @@ Map<String, dynamic> _$MultiPointToJson(MultiPoint instance) =>
 LineString _$LineStringFromJson(Map<String, dynamic> json) => LineString(
       bbox: json['bbox'] == null
           ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+          : BBox.fromJson((json['bbox'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()),
       coordinates: (json['coordinates'] as List<dynamic>?)
-              ?.map((e) => Position.fromJson(
-                  (e as List<dynamic>).map((e) => e as num).toList()))
+              ?.map((e) => Position.fromJson((e as List<dynamic>)
+                  .map((e) => (e as num).toDouble())
+                  .toList()))
               .toList() ??
           const [],
     );
@@ -60,12 +66,14 @@ MultiLineString _$MultiLineStringFromJson(Map<String, dynamic> json) =>
     MultiLineString(
       bbox: json['bbox'] == null
           ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+          : BBox.fromJson((json['bbox'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()),
       coordinates: (json['coordinates'] as List<dynamic>?)
               ?.map((e) => (e as List<dynamic>)
-                  .map((e) => Position.fromJson(
-                      (e as List<dynamic>).map((e) => e as num).toList()))
+                  .map((e) => Position.fromJson((e as List<dynamic>)
+                      .map((e) => (e as num).toDouble())
+                      .toList()))
                   .toList())
               .toList() ??
           const [],
@@ -82,12 +90,14 @@ Map<String, dynamic> _$MultiLineStringToJson(MultiLineString instance) =>
 Polygon _$PolygonFromJson(Map<String, dynamic> json) => Polygon(
       bbox: json['bbox'] == null
           ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+          : BBox.fromJson((json['bbox'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()),
       coordinates: (json['coordinates'] as List<dynamic>?)
               ?.map((e) => (e as List<dynamic>)
-                  .map((e) => Position.fromJson(
-                      (e as List<dynamic>).map((e) => e as num).toList()))
+                  .map((e) => Position.fromJson((e as List<dynamic>)
+                      .map((e) => (e as num).toDouble())
+                      .toList()))
                   .toList())
               .toList() ??
           const [],
@@ -103,13 +113,15 @@ Map<String, dynamic> _$PolygonToJson(Polygon instance) => <String, dynamic>{
 MultiPolygon _$MultiPolygonFromJson(Map<String, dynamic> json) => MultiPolygon(
       bbox: json['bbox'] == null
           ? null
-          : BBox.fromJson(
-              (json['bbox'] as List<dynamic>).map((e) => e as num).toList()),
+          : BBox.fromJson((json['bbox'] as List<dynamic>)
+              .map((e) => (e as num).toDouble())
+              .toList()),
       coordinates: (json['coordinates'] as List<dynamic>?)
               ?.map((e) => (e as List<dynamic>)
                   .map((e) => (e as List<dynamic>)
-                      .map((e) => Position.fromJson(
-                          (e as List<dynamic>).map((e) => e as num).toList()))
+                      .map((e) => Position.fromJson((e as List<dynamic>)
+                          .map((e) => (e as num).toDouble())
+                          .toList()))
                       .toList())
                   .toList())
               .toList() ??
