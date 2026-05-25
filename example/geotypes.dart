@@ -29,7 +29,8 @@ void main(List<String> arguments) {
       ]
   }''';
 
-  final featureCollection =
-      geotypes.GeometryCollection.fromJson(jsonDecode(geoJson));
+  final featureCollection = geotypes.GeometryCollection.fromJson(
+    jsonDecode(geoJson),
+  );
   print(featureCollection);
 }
